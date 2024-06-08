@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Friends Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .friend-item { margin-bottom: 10px; }
+        #chatBox {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+<h1>Friends of Joudi</h1>
+<div id="friendsList"></div>
+<button id="createGroupButton">Create Group</addToLibrary>;
+    <div id="chatBox">
+        <p><strong>Chat:</strong></p>
+        <textarea id="chatInput" placeholder="Type a message..."></textarea>
+        <button onclick="sendMessage()">Send</button>
+        <div id="chatMessages"></div>
+    </div>
+
+    <script >
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('user.json')
+                .then(response => response.json())
+                .then(data => {
+                    displayFriends(data.friends);
+                })
+                .catch(error => console.error('Error loading data:', error));
+        });
+
+        function displayFriends(friends) {
+            const list = document.getElementById('friendsList');
+            friends.forEach(friend => {
+                const label = document.createElement('label');
+                label.innerHTML = `<input type="checkbox" value="${friend}"> ${friend}`;
+                list.appendChild(label);
+                list.appendChild(document.createElement('br'));
+            });
+
+            const button = document.getElementById('createGroupButton');
+            button.addEventListener('click', createGroup);
+        }
+
+        function createGroup() {
+            const selectedFriends = Array.from(document.querySelectorAll('#friendsList input:checked'), input => input.value);
+            selectedFriends.push('joudi'); // Ensure 'joudi' is always included
+            showChatBox(selectedFriends);
+        }
+
+        function showChatBox(members) {
+            const chatBox = document.getElementById('chatBox');
+            if (members.includes('joudi')) { // Display chat box only if 'joudi' is part of the group
+                chatBox.style.display = 'block';
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message) {
+                const messagesContainer = document.getElementById('chatMessages');
+                const msgDiv = document.createElement('div');
+                msgDiv.textContent = message;
+                messagesContainer.appendChild(msgDiv);
+                input.value = ''; // Clear input after sending
+            }
+        }
+
+    </script>
+</body>
+</html>

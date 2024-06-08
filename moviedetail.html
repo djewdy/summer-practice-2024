@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Details</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .movie {
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+        }
+        .movie img {
+            max-width: 200px;
+            margin-right: 20px;
+        }
+        .details {
+            flex-grow: 1;
+        }
+        .details h2 { margin-top: 0; }
+        .button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="movie">
+    <img src="" id="moviePoster">
+    <div class="details">
+        <h2 id="movieTitle"></h2>
+        <p><strong>IMDB Rating:</strong> <span id="imdbRating"></span></p>
+        <p><strong>Country:</strong> <span id="movieCountry"></span></p>
+        <a href="#" class="button" onclick="addToLibrary();">Add to Library</a>
+    </div>
+</div>
+
+<script>
+    function getQueryParams() {
+        var params = {};
+        location.search.substr(1).split("&").forEach(function(item) {
+            var s = item.split("="),
+                k = s[0],
+                v = s[1] && decodeURIComponent(s[1]); //  handle component
+            params[k] = v
+        });
+        return params;
+    }
+
+    function addToLibrary() {
+        var title = document.getElementById('movieTitle').textContent;
+        var poster = document.getElementById('moviePoster').src;
+        var rating = document.getElementById('imdbRating').textContent;
+        var country = document.getElementById('movieCountry').textContent;
+
+        var movie = { title, poster, rating, country };
+        var library = JSON.parse(localStorage.getItem('library') || '[]');
+        library.push(movie);
+        localStorage.setItem('library', JSON.stringify(library));
+        alert('Added to library!');
+    }
+
+
+    window.onload = function() {
+        var params = getQueryParams();
+        document.getElementById('movieTitle').textContent = params.title || 'Unknown Title';
+        document.getElementById('moviePoster').src = params.poster || '';
+        document.getElementById('imdbRating').textContent = params.rating || 'N/A';
+        document.getElementById('movieCountry').textContent = params.country || 'N/A';
+    };
+</script>
+</body>
+</html>

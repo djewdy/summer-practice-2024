@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Library</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .movie {
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .movie img {
+            max-width: 200px;
+            margin-right: 20px;
+        }
+        .details {
+            flex-grow: 1;
+            width: 100%;
+        }
+        .review-box {
+            width: 100%;
+            margin-top: 5px;
+        }
+        .review {
+            background-color: #f0f0f0;
+            padding: 5px;
+            margin-top: 5px;
+            border-left: 3px solid #555;
+        }
+        .remove, .post-review {
+            padding: 5px 10px;
+            background-color: #f44336;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .remove:hover, .post-review:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+<h1>My Library</h1>
+<div id="libraryContainer"></div>
+
+<script>
+    function displayLibrary() {
+        const library = JSON.parse(localStorage.getItem('library') || '[]');
+        const container = document.getElementById('libraryContainer');
+
+        if (library.length === 0) {
+            container.innerHTML = '<p>No movies added to your library yet.</p>';
+            return;
+        }
+
+        library.forEach(function(movie, index) {
+            const div = document.createElement('div');
+            div.className = 'movie';
+            div.innerHTML = `
+                    <img src="${movie.poster}" alt="${movie.title}">
+                    <div class="details">
+                        <h2>${movie.title}</h2>
+                        <p><strong>IMDB Rating:</strong> ${movie.rating}</p>
+                        <p><strong>Country:</strong> ${movie.country}</p>
+                        <textarea class="review-box" id="review-input-${index}" placeholder="Write a review..."></textarea>
+                        <button onclick="postReview(${index})" class="post-review">Post Review</button>
+                        <div id="reviews-${index}"></div>
+                        <button onclick="removeMovie(${index})" class="remove">Remove from Library</button>
+                    </div>
+                `;
+            container.appendChild(div);
+            loadReviews(index);
+        });
+    }
+
+    function postReview(index) {
+        const inputId = 'review-input-' + index;
+        const reviewText = document.getElementById(inputId).value;
+        if (!reviewText.trim()) return; // Do nothing if the review is empty
+
+        const reviewDivId = 'reviews-' + index;
+        const reviewsDiv = document.getElementById(reviewDivId);
+
+        const reviewP = document.createElement('p');
+        reviewP.className = 'review';
+        reviewP.textContent = reviewText;
+        reviewsDiv.insertBefore(reviewP, reviewsDiv.firstChild); // Insert new review at the top
+
+        saveReview(index, reviewText);
+        document.getElementById(inputId).value = ''; // Clear the textbox after posting
+    }
+
+    function loadReviews(index) {
+        const reviews = JSON.parse(localStorage.getItem('reviews-' + index) || '[]');
+        const reviewsDiv = document.getElementById('reviews-' + index);
+        reviews.reverse().forEach(review => {
+            const reviewP = document.createElement('p');
+            reviewP.className = 'review';
+            reviewP.textContent = review;
+            reviewsDiv.appendChild(reviewP);
+        });
+    }
+
+    function saveReview(index, reviewText) {
+        const reviews = JSON.parse(localStorage.getItem('reviews-' + index) || '[]');
+        reviews.push(reviewText);
+        localStorage.setItem('reviews-' + index, JSON.stringify(reviews));
+    }
+
+    function removeMovie(index) {
+        const library = JSON.parse(localStorage.getItem('library') || '[]');
+        library.splice(index, 1);
+        localStorage.removeItem('reviews-' + index); // Also remove the stored reviews for this movie
+        localStorage.setItem('library', JSON.stringify(library));
+        document.getElementById('libraryContainer').innerHTML = '';
+        displayLibrary();
+    }
+
+    window.onload = displayLibrary;
+</script>
+</body>
+</html>

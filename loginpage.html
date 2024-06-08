@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF8">
+    <title>Example Page</title>
+    <link rel="stylesheet" href="loginsheet.css">
+</head>
+<body>
+
+<form id="loginForm" method="post">
+    <div class="container">
+        <label for="uname"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="uname" id="uname" required>
+
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+
+        <button type="submit">Login</button>
+        <label>
+            <input type="checkbox" checked="checked" name="remember"> Remember me
+        </label>
+    </div>
+</form>
+
+<script type="text/javascript">
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        // Prevent the default form submission
+        event.preventDefault();
+
+        // Retrieve the username and password values
+        var username = document.getElementById('uname').value;
+        var password = document.getElementById('psw').value;
+
+        // Debug: Output values to console
+        console.log("Username: " + username + ", Password: " + password);
+
+        // Check username and password
+        if (username === "joudi" && password === "123") {
+            console.log("Credentials correct. Redirecting...");
+            window.location.href = "moviepage.html";
+        } else {
+            console.log("Credentials incorrect. Access denied.");
+            alert('Access Denied');
+        }
+    });
+</script>
+</body>
+</html>

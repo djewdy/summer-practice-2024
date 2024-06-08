@@ -1,0 +1,26 @@
+[
+  {
+    "username": "joudi",
+    "password": "123",
+    "friends": ["Max", "Ama" , "Nandhini"],
+    "groups": []
+  },
+  {
+    "username": "Max",
+    "password": "max1234",
+    "friends": [],
+    "groups": []
+  },
+  {
+    "username": "Nandhini",
+    "password": "nandhini5678",
+    "friends": [],
+    "groups": []
+  },
+  {
+    "username": "Ama",
+    "password": "ama91011",
+    "friends": [],
+    "groups": []
+  }
+]
